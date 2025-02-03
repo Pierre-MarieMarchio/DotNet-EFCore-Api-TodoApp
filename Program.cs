@@ -1,8 +1,12 @@
 using Microsoft.EntityFrameworkCore;
-using TodoApi.Bases;
-using TodoApi.Interfaces;
-using TodoApi.Repositories;
-using TodoApi.Services;
+using TodoApi.Application.Commons;
+using TodoApi.Application.Services;
+using TodoApi.Domain.DTO;
+using TodoApi.Domain.Interfaces;
+using TodoApi.Domain.Models;
+using TodoApi.Infrastructur.Context;
+using TodoApi.Infrastructure.Repositories;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,14 +15,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddDbContext<TodoContext>(opt =>
-    opt.UseMySQL(builder.Configuration.GetConnectionString("TodoApi")));
+builder.Services.AddDbContext<DatabaseContext>(opt =>
+    // opt.UseMySQL(builder.Configuration.GetConnectionString("TodoApi")));
+    opt.UseInMemoryDatabase("TodoList"));
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<BaseApiService<User, UserDto>, UserService>();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+});
+
 
 var app = builder.Build();
 
