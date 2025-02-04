@@ -1,7 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Domain.Commons;
-using TodoApi.Infrastructur.Context;
+using TodoApi.Infrastructure.Persistence.Context;
 
 namespace TodoApi.Infrastructure.Commons;
 
@@ -17,7 +17,7 @@ public abstract class BaseRepository<TModel>(DatabaseContext context) : IBaseRep
         return await _dbSet.ToListAsync();
     }
 
-    public async Task<TModel?> GetOne(long id)
+    public async Task<TModel?> GetOne(Guid id)
     {
         return await _dbSet.FindAsync(id);
     }
@@ -37,7 +37,7 @@ public abstract class BaseRepository<TModel>(DatabaseContext context) : IBaseRep
         return entity;
     }
 
-    public async Task<bool> Delete(long id)
+    public async Task<bool> Delete(Guid id)
     {
         var entity = await _dbSet.FindAsync(id);
         if (entity == null) return false;

@@ -36,7 +36,7 @@ public abstract class BaseController<Tmodel, Tdto>(IBaseApiService<Tdto> service
     }
 
     [HttpGet("{id}")]
-    public virtual async Task<ActionResult<Tdto>> GetOne(long id)
+    public virtual async Task<ActionResult<Tdto>> GetOne(Guid id)
     {
 
         try
@@ -72,7 +72,7 @@ public abstract class BaseController<Tmodel, Tdto>(IBaseApiService<Tdto> service
     }
 
     [HttpPut("{id}")]
-    public virtual async Task<IActionResult> Update(long id, Tdto itemDTO)
+    public virtual async Task<IActionResult> Update(Guid id, Tdto itemDTO)
     {
 
         try
@@ -100,7 +100,7 @@ public abstract class BaseController<Tmodel, Tdto>(IBaseApiService<Tdto> service
 
 
     [HttpDelete("{id}")]
-    public virtual async Task<IActionResult> Delete(long id)
+    public virtual async Task<IActionResult> Delete(Guid id)
     {
         try
         {

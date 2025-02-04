@@ -5,6 +5,6 @@ namespace TodoApi.Domain.Models;
 
 public class TodoItemTag : BaseModel
 {
-    public string? Name { get; set; }
-
+    public required string TagName { get; set; }
+    public ICollection<TodoItem>? TodoItems { get; set; }
 }

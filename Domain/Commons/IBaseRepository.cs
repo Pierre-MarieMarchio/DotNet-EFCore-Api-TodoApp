@@ -6,8 +6,8 @@ public interface IBaseRepository<Tmodel>
     where Tmodel : BaseModel
 {
     Task<List<Tmodel>> GetAll();
-    Task<Tmodel?> GetOne(long id);
+    Task<Tmodel?> GetOne(Guid id);
     Task<Tmodel> Add(Tmodel entity);
     Task<Tmodel> Update(Tmodel entity);
-    Task<bool> Delete(long id);
+    Task<bool> Delete(Guid id);
 }

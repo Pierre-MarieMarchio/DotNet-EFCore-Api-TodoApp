@@ -9,10 +9,10 @@ public abstract class BaseValidator<T> : AbstractValidator<T>
     
     protected BaseValidator()
     {
-        RuleFor(x => x.Id)
-            .NotNull()
-            .WithMessage("L'ID ne peut pas être nul.")
-            .GreaterThan(0)
-            .WithMessage("L'ID doit être supérieur à zéro"); 
+        When(x => x.ShouldValidateId, () => {
+            RuleFor(x => x.Id)
+                       .NotNull()
+                       .WithMessage("L'ID ne peut pas être nul.");
+        });
     }
 }

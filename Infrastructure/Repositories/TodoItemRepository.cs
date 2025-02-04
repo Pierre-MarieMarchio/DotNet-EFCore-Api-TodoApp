@@ -1,12 +1,12 @@
 using System;
 using TodoApi.Domain.Interfaces;
 using TodoApi.Domain.Models;
-using TodoApi.Infrastructure.Persistence.Context;
 using TodoApi.Infrastructure.Commons;
-
+using TodoApi.Infrastructure.Persistence.Context;
 
 namespace TodoApi.Infrastructure.Repositories;
 
-public class UserRepository(DatabaseContext context) : BaseRepository<User>(context), IUserRepository
+public class TodoItemRepository(DatabaseContext context) : BaseRepository<TodoItem>(context), ITotdoItemRepository
 {
+
 }

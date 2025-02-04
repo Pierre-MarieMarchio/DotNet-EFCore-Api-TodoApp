@@ -15,7 +15,7 @@ public abstract class BaseApiService<Tmodel, Tdto>(IBaseRepository<Tmodel> _repo
         return entities.Select(entity => MapToDTO(entity)).ToList();
     }
 
-    public virtual async Task<Tdto> GetOne(long id)
+    public virtual async Task<Tdto> GetOne(Guid id)
     {
         var entity = await _repository.GetOne(id) ?? throw new KeyNotFoundException($"{typeof(Tmodel).Name} not found");
         return MapToDTO(entity);
@@ -23,7 +23,7 @@ public abstract class BaseApiService<Tmodel, Tdto>(IBaseRepository<Tmodel> _repo
 
     public virtual async Task<Tdto> Post(Tdto entityDTO)
     {
-
+        entityDTO.ShouldValidateId = false;
         await this.Validate(entityDTO);
 
         var entity = MapToEntity(entityDTO);
@@ -31,7 +31,7 @@ public abstract class BaseApiService<Tmodel, Tdto>(IBaseRepository<Tmodel> _repo
         return MapToDTO(createdEntity);
     }
 
-    public virtual async Task<Tdto> Update(long id, Tdto entityDTO)
+    public virtual async Task<Tdto> Update(Guid id, Tdto entityDTO)
     {
         this.ValidateIdMatch(id, entityDTO.Id);
 
@@ -50,12 +50,12 @@ public abstract class BaseApiService<Tmodel, Tdto>(IBaseRepository<Tmodel> _repo
         return MapToDTO(entity);
     }
 
-    public virtual async Task<bool> Delete(long id)
+    public virtual async Task<bool> Delete(Guid id)
     {
         return await _repository.Delete(id);
     }
 
-    protected void ValidateIdMatch(long providedId, long entityId)
+    protected void ValidateIdMatch(Guid providedId, Guid entityId)
     {
         if (providedId != entityId)
         {
