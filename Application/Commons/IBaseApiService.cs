@@ -1,5 +1,5 @@
 using System;
-using TodoApi.Domain.Commons;
+using TodoApi.Application.Commons;
 
 namespace TodoApi.Application.Commons;
 

@@ -1,6 +1,6 @@
 using System;
 
-namespace TodoApi.Domain.Commons;
+namespace TodoApi.Application.Commons;
 
 public abstract class BaseDto
 {

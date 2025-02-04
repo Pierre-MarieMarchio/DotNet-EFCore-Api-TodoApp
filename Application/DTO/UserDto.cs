@@ -1,7 +1,7 @@
 using System;
-using TodoApi.Domain.Commons;
+using TodoApi.Application.Commons;
 
-namespace TodoApi.Domain.DTO;
+namespace TodoApi.Application.DTO;
 
 public class UserDto : BaseDto
 {

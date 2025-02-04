@@ -14,11 +14,11 @@ namespace TodoApi.Api.Commons;
 
 [Route("api/[controller]")]
 [ApiController]
-public abstract class BaseController<Tmodel, Tdto>(BaseApiService<Tmodel, Tdto> service) : ControllerBase, IBaseController<Tdto>
+public abstract class BaseController<Tmodel, Tdto>(IBaseApiService<Tdto> service) : ControllerBase, IBaseController<Tdto>
     where Tmodel : BaseModel
     where Tdto : BaseDto
 {
-    protected BaseApiService<Tmodel, Tdto> Service = service;
+    protected IBaseApiService<Tdto> Service = service;
 
     [HttpGet]
     public virtual async Task<ActionResult<IEnumerable<Tdto>>> GetAll()

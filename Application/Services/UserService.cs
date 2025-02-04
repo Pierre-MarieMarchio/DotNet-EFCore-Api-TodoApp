@@ -1,15 +1,16 @@
 using System;
 using TodoApi.Application.Commons;
 using TodoApi.Application.Interfaces;
-using TodoApi.Domain.DTO;
+using TodoApi.Application.DTO;
 using TodoApi.Domain.Interfaces;
 using TodoApi.Domain.Models;
+using FluentValidation;
 
 
 
 namespace TodoApi.Application.Services;
 
-public class UserService(IUserRepository userRepository) : BaseApiService<User, UserDto>(userRepository), IUserService<UserDto>
+public class UserService(IUserRepository _userRepository, IValidator<UserDto> _userValidator) : BaseApiService<User, UserDto>(_userRepository, _userValidator), IUserService<UserDto>
 {
 
     protected override UserDto MapToDTO(User entity)
