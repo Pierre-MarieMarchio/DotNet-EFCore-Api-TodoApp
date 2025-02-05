@@ -5,23 +5,31 @@ using TodoApi.Domain.Commons;
 
 namespace TodoApi.Application.Commons;
 
-public abstract class BaseApiService<Tmodel, Tdto>(IBaseRepository<Tmodel> _repository, IValidator<Tdto> _validator) : IBaseApiService<Tdto>
-    where Tmodel : BaseModel
-    where Tdto : BaseDto
+public abstract class BaseApiService<TModel, TDto> : IBaseApiService<TModel, TDto>
+    where TModel : BaseModel
+    where TDto : BaseDto
 {
-    public virtual async Task<List<Tdto>> GetAll()
+    protected readonly IBaseRepository<TModel> _repository;
+    protected readonly IValidator<TDto> _validator;
+
+    protected BaseApiService(IBaseRepository<TModel> repository, IValidator<TDto> validator)
+    {
+        _repository = repository;
+        _validator = validator;
+    }
+    public virtual async Task<List<TDto>> GetAll()
     {
         var entities = await _repository.GetAll();
         return entities.Select(entity => MapToDTO(entity)).ToList();
     }
 
-    public virtual async Task<Tdto> GetOne(Guid id)
+    public virtual async Task<TDto> GetOne(Guid id)
     {
-        var entity = await _repository.GetOne(id) ?? throw new KeyNotFoundException($"{typeof(Tmodel).Name} not found");
+        var entity = await _repository.GetOne(id) ?? throw new KeyNotFoundException($"{typeof(TModel).Name} not found");
         return MapToDTO(entity);
     }
 
-    public virtual async Task<Tdto> Post(Tdto entityDTO)
+    public virtual async Task<TDto> Post(TDto entityDTO)
     {
         entityDTO.ShouldValidateId = false;
         await this.Validate(entityDTO);
@@ -31,11 +39,11 @@ public abstract class BaseApiService<Tmodel, Tdto>(IBaseRepository<Tmodel> _repo
         return MapToDTO(createdEntity);
     }
 
-    public virtual async Task<Tdto> Update(Guid id, Tdto entityDTO)
+    public virtual async Task<TDto> Update(Guid id, TDto entityDTO)
     {
         this.ValidateIdMatch(id, entityDTO.Id);
 
-        var entity = await _repository.GetOne(id) ?? throw new KeyNotFoundException($"{typeof(Tmodel).Name} not found");
+        var entity = await _repository.GetOne(id) ?? throw new KeyNotFoundException($"{typeof(TModel).Name} not found");
         CopyDtoToEntity(entityDTO, entity);
 
         try
@@ -63,7 +71,7 @@ public abstract class BaseApiService<Tmodel, Tdto>(IBaseRepository<Tmodel> _repo
         }
     }
 
-    protected async Task Validate(Tdto entityDTO)
+    protected async Task Validate(TDto entityDTO)
     {
         var validator = await _validator.ValidateAsync(entityDTO);
         if (!validator.IsValid)
@@ -73,7 +81,7 @@ public abstract class BaseApiService<Tmodel, Tdto>(IBaseRepository<Tmodel> _repo
     }
 
 
-    protected virtual Tdto MapToDTO(Tmodel entity) => throw new NotImplementedException();
-    protected virtual Tmodel MapToEntity(Tdto dto) => throw new NotImplementedException();
-    protected virtual void CopyDtoToEntity(Tdto dto, Tmodel entity) => throw new NotImplementedException();
+    public virtual TDto MapToDTO(TModel entity) => throw new NotImplementedException();
+    public virtual TModel MapToEntity(TDto dto) => throw new NotImplementedException();
+    public virtual void CopyDtoToEntity(TDto dto, TModel entity) => throw new NotImplementedException();
 }

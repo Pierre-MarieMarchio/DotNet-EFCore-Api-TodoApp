@@ -8,6 +8,7 @@ using TodoApi.Application.DTO;
 using TodoApi.Domain.Interfaces;
 using TodoApi.Infrastructure.Persistence.Context;
 using TodoApi.Infrastructure.Repositories;
+using TodoApi.Domain.Models;
 
 
 
@@ -29,14 +30,20 @@ builder.Services.AddDbContext<DatabaseContext>(opt => opt.UseSqlServer(connectio
 // REPOSITORIES
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITodoItemRepository, TodoItemRepository>();
+builder.Services.AddScoped<ITodoItemTagRepository, TodoItemTagRepository>();
 
-// SERVICES
+// API SERVICES
 
-builder.Services.AddScoped<IUserService<UserDto>, UserService>();
+builder.Services.AddScoped<IUserService<User, UserDto>, UserService>();
+builder.Services.AddScoped<ITodoItemService<TodoItem, TodoItemDto>, TodoItemService>();
+builder.Services.AddScoped<ITodoItemTagService<TodoItemTag, TodoItemTagDto>, TodoItemTagService>();
 
 //VALIDATORS
 
 builder.Services.AddScoped<IValidator<UserDto>, UserValidator>();
+builder.Services.AddScoped<IValidator<TodoItemDto>, TodoItemValidator>();
+builder.Services.AddScoped<IValidator<TodoItemTagDto>, TodoItemTagValidator>();
 
 // ENDPOINTS
 

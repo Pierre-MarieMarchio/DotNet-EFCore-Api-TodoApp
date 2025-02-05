@@ -6,38 +6,40 @@ using TodoApi.Domain.Interfaces;
 using TodoApi.Domain.Models;
 using FluentValidation;
 
-
-
 namespace TodoApi.Application.Services;
 
-public class UserService(IUserRepository _userRepository, IValidator<UserDto> _userValidator) : BaseApiService<User, UserDto>(_userRepository, _userValidator), IUserService<UserDto>
+public class UserService : BaseApiService<User, UserDto>, IUserService<User, UserDto>
 {
+    public UserService(IUserRepository repository, IValidator<UserDto> validator)
+        : base(repository, validator)
+    {
+    }
 
-    protected override UserDto MapToDTO(User entity)
+    public override UserDto MapToDTO(User entity)
     {
         return new UserDto
         {
             Id = entity.Id,
             Username = entity.Username,
             Email = entity.Email,
-            Password = entity.Password,
+            Password = entity.Password
 
         };
     }
 
-    protected override User MapToEntity(UserDto dto)
+    public override User MapToEntity(UserDto dto)
     {
         return new User
         {
             Id = dto.Id,
             Username = dto.Username,
             Email = dto.Email,
-            Password = dto.Password,
+            Password = dto.Password
 
         };
     }
 
-    protected override void CopyDtoToEntity(UserDto dto, User entity)
+    public override void CopyDtoToEntity(UserDto dto, User entity)
     {
         entity.Id = dto.Id;
         entity.Username = dto.Username;
@@ -45,4 +47,5 @@ public class UserService(IUserRepository _userRepository, IValidator<UserDto> _u
         entity.Password = dto.Password;
 
     }
+
 }

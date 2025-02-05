@@ -14,19 +14,26 @@ namespace TodoApi.Api.Commons;
 
 [Route("api/[controller]")]
 [ApiController]
-public abstract class BaseController<Tmodel, Tdto>(IBaseApiService<Tdto> service) : ControllerBase, IBaseController<Tdto>
-    where Tmodel : BaseModel
-    where Tdto : BaseDto
+public abstract class BaseController<TModel, TDto> : ControllerBase, IBaseController<TDto>
+    where TModel : BaseModel
+    where TDto : BaseDto
 {
-    protected IBaseApiService<Tdto> Service = service;
+    protected readonly IBaseApiService<TModel, TDto> _service;
+
+
+    protected BaseController(IBaseApiService<TModel, TDto> service)
+    {
+        _service = service;
+    }
+
 
     [HttpGet]
-    public virtual async Task<ActionResult<IEnumerable<Tdto>>> GetAll()
+    public virtual async Task<ActionResult<IEnumerable<TDto>>> GetAll()
     {
 
         try
         {
-            var items = await Service.GetAll();
+            var items = await _service.GetAll();
             return Ok(items);
         }
         catch (Exception ex)
@@ -36,12 +43,12 @@ public abstract class BaseController<Tmodel, Tdto>(IBaseApiService<Tdto> service
     }
 
     [HttpGet("{id}")]
-    public virtual async Task<ActionResult<Tdto>> GetOne(Guid id)
+    public virtual async Task<ActionResult<TDto>> GetOne(Guid id)
     {
 
         try
         {
-            var item = await Service.GetOne(id);
+            var item = await _service.GetOne(id);
             return Ok(item);
         }
         catch (KeyNotFoundException ex)
@@ -56,12 +63,12 @@ public abstract class BaseController<Tmodel, Tdto>(IBaseApiService<Tdto> service
     }
 
     [HttpPost]
-    public virtual async Task<ActionResult<Tdto>> Create(Tdto itemDTO)
+    public virtual async Task<ActionResult<TDto>> Create(TDto itemDTO)
     {
 
         try
         {
-            var createdItem = await Service.Post(itemDTO);
+            var createdItem = await _service.Post(itemDTO);
             return Ok(createdItem);
         }
         catch (Exception e)
@@ -72,12 +79,12 @@ public abstract class BaseController<Tmodel, Tdto>(IBaseApiService<Tdto> service
     }
 
     [HttpPut("{id}")]
-    public virtual async Task<IActionResult> Update(Guid id, Tdto itemDTO)
+    public virtual async Task<IActionResult> Update(Guid id, TDto itemDTO)
     {
 
         try
         {
-            var updatedItem = await Service.Update(id, itemDTO);
+            var updatedItem = await _service.Update(id, itemDTO);
             return Ok(updatedItem);
         }
         catch (ArgumentException)
@@ -104,11 +111,11 @@ public abstract class BaseController<Tmodel, Tdto>(IBaseApiService<Tdto> service
     {
         try
         {
-            var success = await Service.Delete(id);
+            var success = await _service.Delete(id);
 
             if (!success)
             {
-                return NotFound(new { message = $"{typeof(Tmodel).Name} not found" });
+                return NotFound(new { message = $"{typeof(TModel).Name} not found" });
             }
             else
             {

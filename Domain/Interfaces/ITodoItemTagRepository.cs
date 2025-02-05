@@ -4,7 +4,7 @@ using TodoApi.Domain.Models;
 
 namespace TodoApi.Domain.Interfaces;
 
-public interface ITodoItemTag : IBaseRepository<TodoItemTag>
+public interface ITodoItemTagRepository : IBaseRepository<TodoItemTag>
 {
 
 }

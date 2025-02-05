@@ -2,12 +2,12 @@ using System;
 
 namespace TodoApi.Domain.Commons;
 
-public interface IBaseRepository<Tmodel>
-    where Tmodel : BaseModel
+public interface IBaseRepository<TModel>
+    where TModel : BaseModel
 {
-    Task<List<Tmodel>> GetAll();
-    Task<Tmodel?> GetOne(Guid id);
-    Task<Tmodel> Add(Tmodel entity);
-    Task<Tmodel> Update(Tmodel entity);
+    Task<List<TModel>> GetAll();
+    Task<TModel?> GetOne(Guid id);
+    Task<TModel> Add(TModel entity);
+    Task<TModel> Update(TModel entity);
     Task<bool> Delete(Guid id);
 }

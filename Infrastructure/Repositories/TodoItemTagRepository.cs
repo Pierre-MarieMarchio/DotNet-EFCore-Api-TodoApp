@@ -6,6 +6,6 @@ using TodoApi.Infrastructure.Persistence.Context;
 
 namespace TodoApi.Infrastructure.Repositories;
 
-public class TodoItemTagRepository(DatabaseContext context) : BaseRepository<TodoItemTag>(context), ITodoItemTag
+public class TodoItemTagRepository(DatabaseContext context) : BaseRepository<TodoItemTag>(context), ITodoItemTagRepository
 {
 }

@@ -3,12 +3,16 @@ using TodoApi.Application.Commons;
 
 namespace TodoApi.Application.Commons;
 
-public interface IBaseApiService<Tdto>
-    where Tdto : BaseDto
+public interface IBaseApiService<TModel, TDto>
+    where TDto : BaseDto
 {
-    Task<List<Tdto>> GetAll();
-    Task<Tdto> GetOne(Guid id);
-    Task<Tdto> Post(Tdto entityDTO);
-    Task<Tdto> Update(Guid id, Tdto entityDTO);
+    Task<List<TDto>> GetAll();
+    Task<TDto> GetOne(Guid id);
+    Task<TDto> Post(TDto entityDTO);
+    Task<TDto> Update(Guid id, TDto entityDTO);
     Task<bool> Delete(Guid id);
+
+    abstract TDto MapToDTO(TModel entity);
+    abstract TModel MapToEntity(TDto dto);
+    abstract void CopyDtoToEntity(TDto dto, TModel entity);
 }

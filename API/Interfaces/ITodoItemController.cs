@@ -3,7 +3,7 @@ using TodoApi.API.Commons;
 
 namespace TodoApi.API.Interfaces;
 
-public interface IUserController<TDto> : IBaseController<TDto>
+public interface ITodoItemController<TDto> : IBaseController<TDto>
 {
 
 }
