@@ -53,8 +53,20 @@ builder.Services.AddSwaggerGen(options =>
     options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins", policy =>
+    {
+        policy.WithOrigins(Environment.GetEnvironmentVariable("FRONTEND_URL"))
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 
 var app = builder.Build();
+
+app.UseCors("AllowSpecificOrigins");
 
 
 if (app.Environment.IsDevelopment())
