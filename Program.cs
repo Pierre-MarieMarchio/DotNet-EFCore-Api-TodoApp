@@ -53,7 +53,8 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddAuthentication()
-    .AddCookie(IdentityConstants.ApplicationScheme);
+    .AddCookie(IdentityConstants.ApplicationScheme)
+    .AddBearerToken(IdentityConstants.BearerScheme);
 
 builder.Services.AddAuthorization();
 builder.Services.AddIdentityCore<User>()
