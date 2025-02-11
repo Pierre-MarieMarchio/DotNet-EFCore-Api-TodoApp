@@ -1,12 +1,10 @@
 using System;
-using TodoApi.Domain.Commons;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace TodoApi.Domain.Models;
 
-public class User : BaseModel
+public class User : IdentityUser
 {
-    public required string Username { get; set; }
-    public required string Email  {get; set;}
-    public required string Password {get; set;}
     public ICollection<TodoItem>? TodoItems { get; set; }
 }

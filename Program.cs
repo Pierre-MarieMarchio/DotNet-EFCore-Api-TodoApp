@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using FluentValidation;
 using DotNetEnv;
 using TodoApi.Application.Interfaces;
@@ -9,6 +10,7 @@ using TodoApi.Domain.Interfaces;
 using TodoApi.Infrastructure.Persistence.Context;
 using TodoApi.Infrastructure.Repositories;
 using TodoApi.Domain.Models;
+
 
 
 
@@ -29,19 +31,16 @@ builder.Services.AddDbContext<DatabaseContext>(opt => opt.UseSqlServer(connectio
 
 // REPOSITORIES
 
-builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITodoItemRepository, TodoItemRepository>();
 builder.Services.AddScoped<ITodoItemTagRepository, TodoItemTagRepository>();
 
 // API SERVICES
 
-builder.Services.AddScoped<IUserService<User, UserDto>, UserService>();
 builder.Services.AddScoped<ITodoItemService<TodoItem, TodoItemDto>, TodoItemService>();
 builder.Services.AddScoped<ITodoItemTagService<TodoItemTag, TodoItemTagDto>, TodoItemTagService>();
 
 //VALIDATORS
 
-builder.Services.AddScoped<IValidator<UserDto>, UserValidator>();
 builder.Services.AddScoped<IValidator<TodoItemDto>, TodoItemValidator>();
 builder.Services.AddScoped<IValidator<TodoItemTagDto>, TodoItemTagValidator>();
 
@@ -53,11 +52,22 @@ builder.Services.AddSwaggerGen(options =>
     options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 });
 
+builder.Services.AddAuthentication()
+    .AddCookie(IdentityConstants.ApplicationScheme);
+
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityCore<User>()
+    .AddEntityFrameworkStores<DatabaseContext>()
+    .AddApiEndpoints();
+
+
+var frontendUrl = Environment.GetEnvironmentVariable("FRONTEND_URL") ?? "";
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins", policy =>
     {
-        policy.WithOrigins(Environment.GetEnvironmentVariable("FRONTEND_URL"))
+        policy.WithOrigins(frontendUrl)
               .AllowAnyMethod()
               .AllowAnyHeader();
     });
@@ -80,5 +90,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapIdentityApi<User>();
 
-app.Run();
+await app.RunAsync();
