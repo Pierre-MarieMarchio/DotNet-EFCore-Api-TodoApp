@@ -11,11 +11,6 @@ using TodoApi.Infrastructure.Persistence.Context;
 using TodoApi.Infrastructure.Repositories;
 using TodoApi.Domain.Models;
 
-
-
-
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 Env.Load();
@@ -53,7 +48,6 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddAuthentication()
-    .AddCookie(IdentityConstants.ApplicationScheme)
     .AddBearerToken(IdentityConstants.BearerScheme);
 
 builder.Services.AddAuthorization();
@@ -75,10 +69,25 @@ builder.Services.AddCors(options =>
 });
 
 
+
+
 var app = builder.Build();
 
 app.UseCors("AllowSpecificOrigins");
 
+app.MapGet("/manage/info-custom", async (UserManager<User> userManager, HttpContext httpContext) =>
+{
+    var user = await userManager.GetUserAsync(httpContext.User);
+    if (user is null)
+    {
+        return Results.NotFound();
+    }
+    return Results.Ok(new
+    {
+        id = user.Id,
+        email = user.Email,
+    });
+}).RequireAuthorization();
 
 if (app.Environment.IsDevelopment())
 {
